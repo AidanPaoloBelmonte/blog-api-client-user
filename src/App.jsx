@@ -5,6 +5,7 @@ import { useCookies } from "react-cookie";
 import Header from "./components/header";
 import Home from "./components/home";
 import Login from "./components/login";
+import Signup from "./components/signup";
 
 import "./App.css";
 
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <Login></Login>,
+      },
+      {
+        path: "/signup",
+        element: <Signup></Signup>,
       },
     ],
   },

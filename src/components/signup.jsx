@@ -5,7 +5,7 @@ import axios from "axios";
 
 import "../res/accountForm.css";
 
-export default function Login() {
+export default function Signup() {
   const {
     register,
     handleSubmit,
@@ -16,7 +16,7 @@ export default function Login() {
   const [error, setError] = useState("");
 
   async function onSubmit(data) {
-    const response = await axios.post("http://localhost:3000/login", data, {
+    const response = await axios.post("http://localhost:3000/signup", data, {
       withCredentials: true,
     });
 
@@ -39,6 +39,11 @@ export default function Login() {
       return <p className="formError inline">{errors.username.message}</p>;
   }
 
+  function handleEmailErrorDisplay() {
+    if (errors?.email)
+      return <p className="formError inline">{errors.email.message}</p>;
+  }
+
   function handlePasswordErrorDisplay() {
     if (errors?.password)
       return <p className="formError inline">{errors.password.message}</p>;
@@ -49,7 +54,7 @@ export default function Login() {
   }
 
   return (
-    <section className="baseSection loginSection flexFill">
+    <section className="baseSection signUpSection flexFill">
       <div className="borderWrapper">
         <form className="login" onSubmit={handleSubmit(onSubmit)}>
           <div className={`formEntry ${errors?.username ? "invalid" : ""}`}>
@@ -72,6 +77,23 @@ export default function Login() {
               })}
             ></input>
             {handleUsernameErrorDisplay()}
+          </div>
+          <div className={`formEntry ${errors?.email ? "invalid" : ""}`}>
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              {...register("email", {
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "This is not a valid email format.",
+                },
+                required: {
+                  value: true,
+                  message: "An email must be provided",
+                },
+              })}
+            ></input>
+            {handleEmailErrorDisplay()}
           </div>
           <div className={`formEntry ${errors?.password ? "invalid" : ""}`}>
             <label htmlFor="password">Password</label>
@@ -97,7 +119,7 @@ export default function Login() {
               className="submit"
               disabled={!isDirty || !isValid}
             >
-              Login
+              Sign up
             </button>
           </div>
         </form>

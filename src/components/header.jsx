@@ -12,7 +12,9 @@ export default function Header({ isAuth }) {
         </Link>
       </li>
       <li>
-        <Link to="/">Sign Up</Link>
+        <Link to="/signup" viewTransition>
+          Sign Up
+        </Link>
       </li>
     </>
   );
