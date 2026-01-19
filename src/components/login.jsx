@@ -15,7 +15,7 @@ export default function Login() {
     formState: { isDirty, isValid, errors },
   } = useForm({ mode: "all" });
 
-  const { setCookie, setAuth } = useOutletContext();
+  const { setCookie, setUser } = useOutletContext();
   const [error, setError] = useState("");
 
   async function onSubmit(data) {
@@ -25,18 +25,22 @@ export default function Login() {
 
     if (response?.data?.token) {
       const payload = response.data.token;
-
-      setCookie("payload", payload, {
+      const user = response.data.user;
+      const opts = {
         maxAge: 604800, // 7 days
         secure: true,
         sameSite: true,
-      });
+      };
+
+      setCookie("payload", payload, opts);
+
+      setCookie("user", user, opts);
 
       navigate("/blogs");
     }
 
     setError(response?.data?.error);
-    setAuth(!response?.data?.error);
+    setUser(response?.data?.user);
   }
 
   function handleUsernameErrorDisplay() {

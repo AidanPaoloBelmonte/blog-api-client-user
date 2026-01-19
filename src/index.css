@@ -25,6 +25,7 @@
     --negative-light: #f7f2f2;
 
     --base-border-radius: 4px;
+    --bubble-border-radius: 64px;
 }
 
 a {

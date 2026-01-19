@@ -12,12 +12,12 @@ import "./App.css";
 
 function LayoutContext() {
   const [cookies, setCookie] = useCookies(["token"]);
-  const [isAuth, setAuth] = useState(cookies?.payload);
+  const [user, setUser] = useState(cookies?.user);
 
   return (
     <>
-      <Header key={isAuth} isAuth={isAuth} />
-      <Outlet context={{ cookies, setCookie, setAuth }} />
+      <Header key={user?.id ?? 0} user={user} />
+      <Outlet context={{ cookies, setCookie, setUser }} />
     </>
   );
 }

@@ -81,14 +81,35 @@
         text-decoration: none;
     }
 
+    li a.special {
+        padding: 8px 12px;
+        border: 1px solid var(--accent-color);
+        border-radius: var(--bubble-border-radius);
+        background-color: var(--accent-color);
+        margin-left: 12px;
+
+        color: var(--complimentary-color);
+    }
+
     li a:hover {
         color: inherit;
         text-decoration: underline;
     }
 
+    li a.special:hover {
+        color: var(--complimentary-color);
+
+        background-color: var(--complimentary-light);
+    }
+
     li a:focus {
         outline: none;
         border-bottom: 3px solid var(--accent-color);
+    }
+
+    li a.special:focus {
+        outline: 3px solid var(--accent-color);
+        background-color: var(--complimentary-light);
     }
 }
 

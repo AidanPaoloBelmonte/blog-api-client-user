@@ -1,27 +1,36 @@
 import { Link } from "react-router";
 
-export default function Header({ isAuth }) {
-  const headerAccountUnauth = (
-    <>
-      <li>
-        <Link to="/login" viewTransition>
-          Log In
-        </Link>
-      </li>
-      <li>
-        <Link to="/signup" viewTransition>
-          Sign Up
-        </Link>
-      </li>
-    </>
-  );
-
+export default function Header({ user }) {
   function handleHeaderAccountOptions() {
-    if (!isAuth) {
-      return headerAccountUnauth;
+    if (!user) {
+      return (
+        <>
+          <li>
+            <Link to="/login" viewTransition>
+              Log In
+            </Link>
+          </li>
+          <li>
+            <Link className="special" to="/signup" viewTransition>
+              Sign Up
+            </Link>
+          </li>
+        </>
+      );
     }
 
-    return null;
+    return (
+      <>
+        <li>
+          <a>Logout</a>
+        </li>
+        <li>
+          <Link className="special" to={`/users/${user.id}`}>
+            {user.username}
+          </Link>
+        </li>
+      </>
+    );
   }
 
   return (
