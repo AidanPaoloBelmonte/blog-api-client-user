@@ -1,18 +1,19 @@
 import { useState } from "react";
-import { useOutletContext } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 
 import "../res/accountForm.css";
 
 export default function Signup() {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     formState: { isDirty, isValid, errors },
   } = useForm({ mode: "all" });
 
-  const { setCookie, setAuth } = useOutletContext();
   const [error, setError] = useState("");
 
   async function onSubmit(data) {
@@ -20,18 +21,11 @@ export default function Signup() {
       withCredentials: true,
     });
 
-    if (response?.data?.token) {
-      const payload = response.data.token;
-
-      setCookie("payload", payload, {
-        maxAge: 604800, // 7 days
-        secure: true,
-        sameSite: true,
-      });
+    if (response.status == 201) {
+      navigate("/login", { viewTransition: true });
     }
 
     setError(response?.data?.error);
-    setAuth(!response?.data?.error);
   }
 
   function handleUsernameErrorDisplay() {
