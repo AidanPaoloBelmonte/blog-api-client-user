@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import axios from "axios";
 
 import "../res/blog.css";
@@ -45,9 +45,47 @@ export default function BlogPost() {
     );
   }
 
+  function handleCommentsDisplay() {
+    if (blog?.comments) {
+      return (
+        <section className="baseSection commentsSection">
+          <h2>Comments</h2>
+          {blog.comments.map((comment) => {
+            const authorComponent = comment?.author ? (
+              <>
+                <Link to={`/users/${comment.author.id}`} className="author">
+                  {comment.author.username}
+                </Link>
+              </>
+            ) : (
+              <p className="author">anonymous</p>
+            );
+
+            return (
+              <div key={comment.id} className="comment">
+                <div className="details">
+                  {authorComponent}
+                  <p className="date">
+                    {new Date(blog.creationDate).toDateString()}
+                  </p>
+                </div>
+                <p className="content">{comment.content}</p>
+              </div>
+            );
+          })}
+        </section>
+      );
+    }
+
+    return <></>;
+  }
+
   return (
-    <section className="baseSection blogPostSection">
-      {handleBlogDisplay()}
-    </section>
+    <>
+      <section className="baseSection blogPostSection">
+        {handleBlogDisplay()}
+      </section>
+      {handleCommentsDisplay()}
+    </>
   );
 }
