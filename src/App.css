@@ -34,6 +34,8 @@
     font-size: 0.8rem;
     font-weight: bold;
     text-align: left;
+
+    user-select: none;
 }
 
 .formError.inline {
@@ -48,7 +50,7 @@
     padding: 16px 0px;
 
     text-align: center;
-    background-color: var(--negative-light);
+    background-color: var(--negative-white);
 }
 
 .formFooter {
@@ -61,6 +63,20 @@
     justify-content: space-between;
     align-items: center;
     gap: 12px;
+}
+
+.negative {
+    background-color: var(--negative-color);
+}
+
+.negative:hover {
+    background-color: var(--negative-light);
+    border: 1px solid var(--negative-color);
+}
+
+.negative:focus {
+    background-color: var(--negative-light);
+    outline: 3px solid var(--negative-color);
 }
 
 .navlinks {
@@ -131,4 +147,18 @@
 
 .navbar {
     margin-left: auto;
+}
+
+.asInputField {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    overflow-wrap: break-word;
+    height: auto;
+}
+
+.field:focus,
+.field:active {
+    outline: none;
 }

@@ -18,7 +18,7 @@ function LayoutContext() {
   return (
     <>
       <Header key={user?.id ?? 0} user={user} />
-      <Outlet context={{ cookies, setCookie, setUser }} />
+      <Outlet context={{ cookies, setCookie, user, setUser }} />
     </>
   );
 }

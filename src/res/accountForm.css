@@ -9,6 +9,10 @@ form {
     margin-right: 2px;
 
     background-color: var(--base-background);
+
+    button {
+        margin-left: auto;
+    }
 }
 
 label {
@@ -17,7 +21,8 @@ label {
     font-size: 1.1rem;
 }
 
-input {
+input,
+.asInputField {
     padding: 0.3rem;
     border: 1px solid var(--complimentary-light);
     border-radius: var(--base-border-radius);
@@ -27,12 +32,9 @@ input {
     background-color: #fbf9fc;
 }
 
-input:focus {
+input:focus,
+.asInputField:focus {
     outline: 3px solid var(--accent-color);
-}
-
-button {
-    margin-left: auto;
 }
 
 .borderWrapper {
@@ -65,8 +67,9 @@ button {
         color: var(--negative-color);
     }
 
-    input {
+    input,
+    .asInputField {
         border: 1px solid var(--negative-color);
-        background-color: var(--negative-light);
+        background-color: var(--negative-white);
     }
 }

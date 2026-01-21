@@ -19,10 +19,12 @@
     --base-color: #5c575e;
     --base-background: #fcfcfc;
     --accent-color: #8858ad;
+    --accent-light: #eee3f2;
     --complimentary-color: #faf9fc;
     --complimentary-light: #7b19c1;
     --negative-color: #f9626c;
-    --negative-light: #f7f2f2;
+    --negative-light: #f75661;
+    --negative-white: #f7f2f2;
 
     --base-border-radius: 4px;
     --bubble-border-radius: 64px;

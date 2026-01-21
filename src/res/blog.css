@@ -4,6 +4,39 @@ h2 {
     margin-bottom: 0px;
 }
 
+form.postComment {
+    gap: 8px;
+
+    padding: 16px;
+    border: 3px dashed var(--accent-color);
+
+    label {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    input {
+        display: none;
+    }
+
+    .formFooter {
+        width: 100%;
+
+        align-items: center;
+
+        margin-top: 0px;
+
+        div {
+            display: flex;
+            gap: 8px;
+        }
+
+        button {
+            margin: 0px;
+        }
+    }
+}
+
 .blogPostSection,
 .commentsSection {
     text-align: left;
@@ -31,6 +64,37 @@ h2 {
     padding: 8px 16px;
     border: 1px solid var(--accent-color);
     border-radius: var(--base-border-radius);
+}
+
+.comment.prompt {
+    padding: 0px;
+    border-width: 3px;
+    border-style: dashed;
+
+    color: inherit;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-align: center;
+
+    background-color: transparent;
+}
+
+.comment.prompt:hover,
+.comment.prompt:focus {
+    background-color: var(--accent-light);
+}
+
+.asInputStatus {
+    font-size: 0.9rem;
+    text-align: right;
+
+    user-select: none;
+}
+
+.commentWarn {
+    margin-left: 2px;
+
+    user-select: none;
 }
 
 .details {

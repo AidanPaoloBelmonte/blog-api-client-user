@@ -1,11 +1,28 @@
 import { useState, useEffect } from "react";
-import { Link, useParams } from "react-router";
+import { Link, useOutletContext, useParams } from "react-router";
+import { useForm } from "react-hook-form";
 import axios from "axios";
 
 import "../res/blog.css";
 
 export default function BlogPost() {
+  const {
+    register,
+    handleSubmit,
+    trigger,
+    setValue,
+    getValues,
+    formState: { isDirty, isValid, errors },
+  } = useForm({
+    mode: "all",
+    defaultValues: {
+      comment: "",
+    },
+  });
+
   const { id } = useParams();
+  const { user } = useOutletContext;
+  const [isWritingComment, setWritingComment] = useState(false);
   const [blog, setBlog] = useState({});
 
   useEffect(() => {
@@ -27,6 +44,66 @@ export default function BlogPost() {
     fetchBlogPost();
   }, [id]);
 
+  function onNewCommentInit() {
+    setWritingComment(true);
+  }
+
+  function onNewCommentEnd() {
+    setWritingComment(false);
+  }
+
+  function handleCommentErrorDisplay() {
+    if (errors?.comment)
+      return <p className="formError inline">{errors.comment.message}</p>;
+  }
+
+  async function onSubmit(data) {
+    const response = await axios.post(
+      `http://localhost:3000/blogs/${id}/comments`,
+      data,
+      {
+        withCredentials: true,
+      },
+    );
+
+    if (!response.data?.error) {
+      onNewCommentEnd();
+    } else {
+      console.log("damne");
+    }
+  }
+
+  const onNewCommentInput = (e) => {
+    let c = e.target.innerText;
+    if (c.length > 255) {
+      c = c.substring(0, 255);
+
+      e.target.innerText = c;
+
+      /// Keeping Caret at end of Line
+      /// Source: https://www.tutorialpedia.org/blog/how-to-move-the-cursor-to-the-end-of-a-contenteditable-entity/
+      // Create a range that selects all text and collapses at the end
+      e.target.focus();
+      const range = document.createRange();
+      if (e.target?.lastChild) {
+        range.setStartAfter(e.target.lastChild);
+      } else {
+        range.setStartAfter(e.target, 0);
+      }
+      range.collapse();
+
+      // Apply Range
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+
+      return;
+    }
+
+    setValue("comment", c);
+    trigger("comment");
+  };
+
   function handleBlogDisplay() {
     if (Object.keys(blog).length === 0) {
       return <p>Loading Post...</p>;
@@ -45,11 +122,89 @@ export default function BlogPost() {
     );
   }
 
+  function handleCommentFormDisplay() {
+    if (!isWritingComment) {
+      return (
+        <button
+          className="comment prompt"
+          type="button"
+          onClick={onNewCommentInit}
+        >
+          <p>Post your thoughts!</p>
+        </button>
+      );
+    }
+
+    return (
+      <div>
+        <form className="postComment" onSubmit={handleSubmit(onSubmit)}>
+          <div className={`formEntry ${errors?.comment ? "invalid" : ""}`}>
+            <label htmlFor="comment">New Comment</label>
+            <input
+              {...register("comment", {
+                pattern: {
+                  value: /.*\S.*/,
+                  message: "The comment cannot be only spaces",
+                },
+                maxLength: {
+                  value: 255,
+                  message: "Comments cannot be any longer than 255 characters",
+                },
+                required: {
+                  value: true,
+                  message: "The comment must have content.",
+                },
+              })}
+            ></input>
+            <div className="asInputField">
+              <div
+                className="field"
+                onInput={onNewCommentInput}
+                role="textbox"
+                contentEditable
+              ></div>
+              <div className="asInputStatus">
+                Count:{" "}
+                {getValues != undefined || getValues("comment") != undefined
+                  ? getValues("comment").length
+                  : 0}
+                /255
+              </div>
+            </div>
+            {handleCommentErrorDisplay()}
+          </div>
+          <div className="formFooter">
+            <p className="commentWarn">
+              Posting as <b>{user?.username ? user.username : "anonymous"}</b>
+            </p>
+            <div className="buttons">
+              <button
+                className="negative"
+                type="button"
+                onClick={onNewCommentEnd}
+              >
+                Discard
+              </button>
+              <button
+                type="submit"
+                className="submit"
+                disabled={!isDirty || !isValid}
+              >
+                Post
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    );
+  }
+
   function handleCommentsDisplay() {
     if (blog?.comments) {
       return (
         <section className="baseSection commentsSection">
           <h2>Comments</h2>
+          {handleCommentFormDisplay()}
           {blog.comments.map((comment) => {
             const authorComponent = comment?.author ? (
               <>
