@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 
 import "../res/blog.css";
+import { useCallback } from "react";
 
 export default function BlogPost() {
   const {
@@ -24,6 +25,23 @@ export default function BlogPost() {
   const { user } = useOutletContext();
   const [isWritingComment, setWritingComment] = useState(false);
   const [blog, setBlog] = useState({});
+  const [comments, setComments] = useState([]);
+
+  const fetchComments = useCallback(async () => {
+    console.log("Fetching comments!");
+
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/blogs/${id}/comments`,
+      );
+
+      if (response.data?.comments) {
+        setComments(response.data.comments);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }, [id]);
 
   useEffect(() => {
     async function fetchBlogPost() {
@@ -31,6 +49,9 @@ export default function BlogPost() {
         const response = await axios.get(`http://localhost:3000/blogs/${id}`);
 
         if (response.data?.blog) {
+          setComments(response.data.blog.comments);
+
+          response.data.comments = null;
           setBlog(response.data.blog);
           return;
         }
@@ -68,6 +89,7 @@ export default function BlogPost() {
 
     if (!response.data?.error) {
       onNewCommentEnd();
+      await fetchComments(id);
     } else {
       console.log("damne");
     }
@@ -201,39 +223,35 @@ export default function BlogPost() {
   }
 
   function handleCommentsDisplay() {
-    if (blog?.comments) {
-      return (
-        <section className="baseSection commentsSection">
-          <h2>Comments</h2>
-          {handleCommentFormDisplay()}
-          {blog.comments.map((comment) => {
-            const authorComponent = comment?.author ? (
-              <>
-                <Link to={`/users/${comment.author.id}`} className="author">
-                  {comment.author.username}
-                </Link>
-              </>
-            ) : (
-              <p className="author">anonymous</p>
-            );
-
-            return (
-              <div key={comment.id} className="comment">
-                <div className="details">
-                  {authorComponent}
-                  <p className="date">
-                    {new Date(blog.creationDate).toDateString()}
-                  </p>
-                </div>
-                <p className="content">{comment.content}</p>
-              </div>
-            );
-          })}
-        </section>
+    const commentsArray = comments.map((comment) => {
+      const authorComponent = comment?.author ? (
+        <>
+          <Link to={`/users/${comment.author.id}`} className="author">
+            {comment.author.username}
+          </Link>
+        </>
+      ) : (
+        <p className="author">anonymous</p>
       );
-    }
 
-    return <></>;
+      return (
+        <div key={comment.id} className="comment">
+          <div className="details">
+            {authorComponent}
+            <p className="date">{new Date(blog.creationDate).toDateString()}</p>
+          </div>
+          <p className="content">{comment.content}</p>
+        </div>
+      );
+    });
+
+    return (
+      <section className="baseSection commentsSection">
+        <h2>Comments</h2>
+        {handleCommentFormDisplay()}
+        {commentsArray}
+      </section>
+    );
   }
 
   return (
