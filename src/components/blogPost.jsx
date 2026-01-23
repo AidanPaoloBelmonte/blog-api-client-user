@@ -71,6 +71,8 @@ export default function BlogPost() {
 
   function onNewCommentEnd() {
     setWritingComment(false);
+
+    setValue("comment", "");
   }
 
   function handleCommentErrorDisplay() {
@@ -91,7 +93,7 @@ export default function BlogPost() {
       onNewCommentEnd();
       await fetchComments(id);
     } else {
-      console.log("damne");
+      console.log("Failed to get new Comments");
     }
   }
 
