@@ -242,7 +242,9 @@ export default function BlogPost() {
         <div key={comment.id} className="comment">
           <div className="details">
             {authorComponent}
-            <p className="date">{new Date(blog.creationDate).toDateString()}</p>
+            <p className="date">
+              {new Date(comment.creationDate).toDateString()}
+            </p>
           </div>
           <p className="content">{comment.content}</p>
         </div>

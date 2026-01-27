@@ -11,6 +11,10 @@
     }
 }
 
+.commentsSection {
+    margin-top: 16px;
+}
+
 .blogList {
     display: flex;
     flex-direction: column;

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useOutletContext, useParams } from "react-router";
+import { Link, useOutletContext, useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import ReactModal from "react-modal";
 import axios from "axios";
@@ -19,7 +19,9 @@ export default function User() {
   useEffect(() => {
     async function getUser() {
       try {
-        const response = await axios.get(`http://localhost:3000/user/${id}`);
+        const response = await axios.get(
+          `http://localhost:3000/user/${id}?comments=true`,
+        );
 
         if (response.data?.user) {
           setUserData(response.data.user);
@@ -74,6 +76,37 @@ export default function User() {
     );
   }
 
+  function displayComments() {
+    if (!userData?.comments) return <p>No Comments to display.</p>;
+
+    const comments = userData.comments.map((comment) => {
+      return (
+        <div key={comment.id} className="comment">
+          <div className="details">
+            {" "}
+            <p>
+              On{" "}
+              <Link
+                to={`/blogs/${comment.blog.id}`}
+                className="author"
+                viewTransition
+              >
+                {comment.blog.title}
+              </Link>
+            </p>
+            <p className="date">
+              {new Date(comment.creationDate).toDateString()}
+            </p>
+          </div>
+          <p>{comment.content}</p>
+        </div>
+      );
+    });
+
+    if (comments.length > 0) return comments;
+    return <p>No comments to display.</p>;
+  }
+
   function displayUserData() {
     if (!userData) {
       return <p>Fetching...</p>;
@@ -121,6 +154,10 @@ export default function User() {
     <>
       {modal}
       <section className="baseSection userSection">{displayUserData()}</section>
+      <section className="baseSection commentsSection">
+        <h2>Comments</h2>
+        {displayComments()}
+      </section>
     </>
   );
 }
